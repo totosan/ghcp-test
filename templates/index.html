@@ -44,29 +44,36 @@
         <div id="dashboardView" class="view-container">
             <div class="row">
                 <div class="col-md-12">
-                    <h2>Dashboard</h2>
+                    <h2><i class="bi bi-speedometer2"></i> Dashboard</h2>
                     <div class="row mt-4">
                         <div class="col-md-3">
-                            <div class="card text-white bg-primary mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Case Studies</h5>
-                                    <h2 id="totalCases">0</h2>
+                            <div class="card text-white bg-primary mb-3" style="border: none;">
+                                <div class="card-body text-center">
+                                    <div class="mb-2">
+                                        <i class="bi bi-briefcase-fill" style="font-size: 2.5rem;"></i>
+                                    </div>
+                                    <h3 id="totalCases" class="mb-1">0</h3>
+                                    <p class="mb-0 opacity-75">Total Case Studies</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-9">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Quick Actions</h5>
-                                    <button class="btn btn-primary me-2" id="quickAddCase">
-                                        <i class="bi bi-plus-lg"></i> Add New Case Study
-                                    </button>
-                                    <button class="btn btn-outline-primary me-2" id="quickViewCases">
-                                        <i class="bi bi-search"></i> Search & Filter
-                                    </button>
-                                    <button class="btn btn-outline-secondary" id="quickManageTemplates">
-                                        <i class="bi bi-file-earmark-ppt"></i> Manage Templates
-                                    </button>
+                                    <h5 class="card-title mb-3">
+                                        <i class="bi bi-lightning-fill text-warning"></i> Quick Actions
+                                    </h5>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button class="btn btn-primary" id="quickAddCase">
+                                            <i class="bi bi-plus-lg"></i> Add New Case Study
+                                        </button>
+                                        <button class="btn btn-outline-primary" id="quickViewCases">
+                                            <i class="bi bi-search"></i> Search & Filter
+                                        </button>
+                                        <button class="btn btn-outline-secondary" id="quickManageTemplates">
+                                            <i class="bi bi-file-earmark-ppt"></i> Manage Templates
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +83,9 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Recent Case Studies</h5>
+                                    <h5 class="card-title mb-3">
+                                        <i class="bi bi-clock-history"></i> Recent Case Studies
+                                    </h5>
                                     <div id="recentCases" class="list-group">
                                         <p class="text-muted">Loading...</p>
                                     </div>
@@ -92,59 +101,62 @@
         <div id="caseListView" class="view-container" style="display: none;">
             <div class="row">
                 <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Filters</h5>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Search</label>
-                                <input type="text" class="form-control" id="searchInput" 
-                                       placeholder="Search cases...">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Industry</label>
-                                <select class="form-select" id="industryFilter">
-                                    <option value="">All Industries</option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Year</label>
-                                <select class="form-select" id="yearFilter">
-                                    <option value="">All Years</option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Technologies</label>
-                                <input type="text" class="form-control" id="techFilter" 
-                                       placeholder="e.g., Python, AWS">
-                            </div>
-                            
-                            <button class="btn btn-primary w-100" id="applyFilters">
-                                <i class="bi bi-funnel"></i> Apply Filters
-                            </button>
-                            <button class="btn btn-outline-secondary w-100 mt-2" id="clearFilters">
-                                Clear Filters
-                            </button>
+                    <div class="filter-section">
+                        <h5><i class="bi bi-funnel"></i> Filter By</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Search</label>
+                            <input type="text" class="form-control" id="searchInput" 
+                                   placeholder="Search cases...">
                         </div>
+                        
+                        <hr>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Industry</label>
+                            <select class="form-select" id="industryFilter">
+                                <option value="">All Industries</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Year</label>
+                            <select class="form-select" id="yearFilter">
+                                <option value="">All Years</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Technologies</label>
+                            <input type="text" class="form-control" id="techFilter" 
+                                   placeholder="e.g., Python, AWS">
+                        </div>
+                        
+                        <button class="btn btn-primary w-100 mb-2" id="applyFilters">
+                            <i class="bi bi-check-circle"></i> Apply Filters
+                        </button>
+                        <button class="btn btn-outline-secondary w-100" id="clearFilters">
+                            <i class="bi bi-x-circle"></i> Clear All
+                        </button>
                     </div>
                 </div>
                 
                 <div class="col-md-9">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2>Case Studies <span id="caseCount" class="badge bg-secondary">0</span></h2>
                         <div>
-                            <select class="form-select form-select-sm d-inline-block w-auto" id="sortBy">
+                            <h2 class="mb-0">Case Studies <span id="caseCount" class="badge bg-secondary">0</span></h2>
+                            <p class="text-muted mb-0">Showing all matching results</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <select class="form-select form-select-sm" id="sortBy" style="width: auto;">
                                 <option value="updated_at">Last Updated</option>
                                 <option value="created_at">Created Date</option>
                                 <option value="project_name">Project Name</option>
                                 <option value="project_year">Year</option>
                             </select>
-                            <select class="form-select form-select-sm d-inline-block w-auto ms-2" id="sortOrder">
-                                <option value="desc">Descending</option>
-                                <option value="asc">Ascending</option>
+                            <select class="form-select form-select-sm" id="sortOrder" style="width: auto;">
+                                <option value="desc">↓ Desc</option>
+                                <option value="asc">↑ Asc</option>
                             </select>
                         </div>
                     </div>

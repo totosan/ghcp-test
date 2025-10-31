@@ -98,16 +98,31 @@ async function loadDashboard() {
         // Load recent cases
         const recentDiv = document.getElementById('recentCases');
         if (stats.recent.length === 0) {
-            recentDiv.innerHTML = '<p class="text-muted">No case studies yet. Add your first one!</p>';
+            recentDiv.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="bi bi-inbox" style="font-size: 3rem; color: var(--text-secondary);"></i>
+                    <p class="text-muted mt-3">No case studies yet. Add your first one!</p>
+                </div>
+            `;
         } else {
             recentDiv.innerHTML = stats.recent.map(cs => `
                 <a href="#" class="list-group-item list-group-item-action" onclick="viewCaseDetail(${cs.id}); return false;">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1">${cs.project_name}</h6>
-                        <small>${cs.industry || 'N/A'}</small>
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-1">
+                                <h6 class="mb-0 me-2">${cs.project_name}</h6>
+                                ${cs.industry ? `<span class="badge bg-secondary">${cs.industry}</span>` : ''}
+                            </div>
+                            <p class="mb-1 text-muted small">
+                                <i class="bi bi-building"></i> ${cs.client_name}
+                            </p>
+                        </div>
+                        <div class="text-end ms-3">
+                            <small class="text-muted">
+                                <i class="bi bi-clock"></i> ${new Date(cs.updated_at).toLocaleDateString()}
+                            </small>
+                        </div>
                     </div>
-                    <p class="mb-1 text-truncate">${cs.client_name}</p>
-                    <small>Updated: ${new Date(cs.updated_at).toLocaleDateString()}</small>
                 </a>
             `).join('');
         }
@@ -135,38 +150,54 @@ async function loadCasesList() {
         
         const casesDiv = document.getElementById('casesList');
         if (allCases.length === 0) {
-            casesDiv.innerHTML = '<div class="alert alert-info">No case studies found. Try adjusting your filters.</div>';
+            casesDiv.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No case studies found. Try adjusting your filters.
+                </div>
+            `;
         } else {
             casesDiv.innerHTML = allCases.map(cs => `
                 <div class="card mb-3">
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row align-items-center">
                             <div class="col-md-9">
-                                <h5 class="card-title">
-                                    ${cs.project_name}
-                                    ${cs.confidential ? '<span class="badge bg-warning text-dark">Confidential</span>' : ''}
-                                </h5>
-                                <h6 class="card-subtitle mb-2 text-muted">${cs.client_name} | ${cs.industry || 'N/A'} | ${cs.project_year || 'N/A'}</h6>
-                                <p class="card-text text-truncate">${cs.challenge}</p>
-                                <div class="mt-2">
-                                    ${cs.technologies ? cs.technologies.split(',').map(t => 
-                                        `<span class="badge bg-secondary me-1">${t.trim()}</span>`
-                                    ).join('') : ''}
+                                <div class="d-flex align-items-center mb-2">
+                                    <h5 class="card-title mb-0 me-2">
+                                        ${cs.project_name}
+                                    </h5>
+                                    ${cs.confidential ? '<span class="badge bg-warning text-dark"><i class="bi bi-shield-lock"></i> Confidential</span>' : ''}
                                 </div>
+                                <h6 class="card-subtitle mb-3 text-muted">
+                                    <i class="bi bi-building"></i> ${cs.client_name} 
+                                    ${cs.industry ? `<span class="mx-2">•</span> <i class="bi bi-tag"></i> ${cs.industry}` : ''} 
+                                    ${cs.project_year ? `<span class="mx-2">•</span> <i class="bi bi-calendar"></i> ${cs.project_year}` : ''}
+                                </h6>
+                                <p class="card-text text-muted mb-3" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                    ${cs.challenge}
+                                </p>
+                                ${cs.technologies ? `
+                                    <div class="mt-2">
+                                        ${cs.technologies.split(',').map(t => 
+                                            `<span class="badge bg-secondary me-1 mb-1"><i class="bi bi-code-slash"></i> ${t.trim()}</span>`
+                                        ).join('')}
+                                    </div>
+                                ` : ''}
                             </div>
-                            <div class="col-md-3 text-end">
-                                <button class="btn btn-sm btn-primary mb-2 w-100" onclick="viewCaseDetail(${cs.id})">
-                                    <i class="bi bi-eye"></i> View
-                                </button>
-                                <button class="btn btn-sm btn-outline-primary mb-2 w-100" onclick="exportCase(${cs.id})">
-                                    <i class="bi bi-file-earmark-ppt"></i> Export
-                                </button>
-                                <button class="btn btn-sm btn-warning mb-2 w-100" onclick="editCase(${cs.id})">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </button>
-                                <button class="btn btn-sm btn-danger w-100" onclick="deleteCase(${cs.id})">
-                                    <i class="bi bi-trash"></i> Delete
-                                </button>
+                            <div class="col-md-3">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary btn-sm" onclick="viewCaseDetail(${cs.id})">
+                                        <i class="bi bi-eye"></i> View Details
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="exportCase(${cs.id})">
+                                        <i class="bi bi-file-earmark-ppt"></i> Export
+                                    </button>
+                                    <button class="btn btn-warning btn-sm" onclick="editCase(${cs.id})">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteCase(${cs.id})">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -176,7 +207,7 @@ async function loadCasesList() {
     } catch (error) {
         console.error('Error loading cases:', error);
         document.getElementById('casesList').innerHTML = 
-            '<div class="alert alert-danger">Error loading case studies.</div>';
+            '<div class="alert alert-danger"><i class="bi bi-exclamation-triangle"></i> Error loading case studies.</div>';
     }
 }
 
@@ -221,50 +252,74 @@ async function viewCaseDetail(id) {
         
         document.getElementById('detailProjectName').textContent = cs.project_name;
         document.getElementById('caseDetailBody').innerHTML = `
-            <div class="row">
+            <div class="row mb-4">
                 <div class="col-md-6 mb-3">
-                    <strong>Client:</strong> ${cs.client_name}
+                    <div class="p-3" style="background-color: var(--hover-bg); border-radius: 8px;">
+                        <small class="text-muted d-block mb-1">Client</small>
+                        <strong>${cs.client_name}</strong>
+                    </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <strong>Industry:</strong> ${cs.industry || 'N/A'}
+                    <div class="p-3" style="background-color: var(--hover-bg); border-radius: 8px;">
+                        <small class="text-muted d-block mb-1">Industry</small>
+                        <strong>${cs.industry || 'N/A'}</strong>
+                    </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <strong>Year:</strong> ${cs.project_year || 'N/A'}
+                    <div class="p-3" style="background-color: var(--hover-bg); border-radius: 8px;">
+                        <small class="text-muted d-block mb-1">Year</small>
+                        <strong>${cs.project_year || 'N/A'}</strong>
+                    </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <strong>Project Value:</strong> ${cs.project_value || 'N/A'}
+                    <div class="p-3" style="background-color: var(--hover-bg); border-radius: 8px;">
+                        <small class="text-muted d-block mb-1">Project Value</small>
+                        <strong>${cs.project_value || 'N/A'}</strong>
+                    </div>
                 </div>
             </div>
             
-            <h6 class="mt-3">Challenge</h6>
-            <p>${cs.challenge}</p>
+            <div class="mb-4">
+                <h6><i class="bi bi-exclamation-circle"></i> Challenge</h6>
+                <p class="text-muted">${cs.challenge}</p>
+            </div>
             
-            <h6 class="mt-3">Solution</h6>
-            <p>${cs.solution}</p>
+            <div class="mb-4">
+                <h6><i class="bi bi-lightbulb"></i> Solution</h6>
+                <p class="text-muted">${cs.solution}</p>
+            </div>
             
-            <h6 class="mt-3">Outcomes</h6>
-            <p>${cs.outcomes}</p>
+            <div class="mb-4">
+                <h6><i class="bi bi-graph-up-arrow"></i> Outcomes</h6>
+                <p class="text-muted">${cs.outcomes}</p>
+            </div>
             
-            <div class="row mt-3">
-                <div class="col-md-4">
-                    <strong>Technologies:</strong><br>
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <h6><i class="bi bi-code-slash"></i> Technologies</h6>
                     ${cs.technologies ? cs.technologies.split(',').map(t => 
-                        `<span class="badge bg-secondary me-1">${t.trim()}</span>`
-                    ).join('') : 'N/A'}
+                        `<span class="badge bg-secondary me-1 mb-1">${t.trim()}</span>`
+                    ).join('') : '<span class="text-muted">N/A</span>'}
                 </div>
-                <div class="col-md-4">
-                    <strong>Team Size:</strong> ${cs.team_size || 'N/A'}
+                <div class="col-md-6 mb-3">
+                    <div class="p-3" style="background-color: var(--hover-bg); border-radius: 8px;">
+                        <small class="text-muted d-block mb-1"><i class="bi bi-people"></i> Team Size</small>
+                        <strong>${cs.team_size || 'N/A'}</strong>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <strong>Duration:</strong> ${cs.duration_months ? cs.duration_months + ' months' : 'N/A'}
+                <div class="col-md-6 mb-3">
+                    <div class="p-3" style="background-color: var(--hover-bg); border-radius: 8px;">
+                        <small class="text-muted d-block mb-1"><i class="bi bi-calendar-range"></i> Duration</small>
+                        <strong>${cs.duration_months ? cs.duration_months + ' months' : 'N/A'}</strong>
+                    </div>
                 </div>
             </div>
             
             ${cs.tags ? `
                 <div class="mt-3">
-                    <strong>Tags:</strong><br>
+                    <h6><i class="bi bi-tags"></i> Tags</h6>
                     ${cs.tags.split(',').map(t => 
-                        `<span class="badge bg-info text-dark me-1">${t.trim()}</span>`
+                        `<span class="badge bg-info text-dark me-1 mb-1">${t.trim()}</span>`
                     ).join('')}
                 </div>
             ` : ''}
