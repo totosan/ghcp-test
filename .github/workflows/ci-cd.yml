@@ -5,7 +5,7 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 env:
   PYTHON_VERSION: '3.12'
@@ -144,7 +144,7 @@ jobs:
     - name: Deploy to Azure Web App
       id: deploy
       uses: azure/webapps-deploy@v3
-      if: secrets.AZURE_WEBAPP_NAME != ''
+      if: ${{ secrets.AZURE_WEBAPP_NAME != '' }}
       with:
         app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
@@ -166,7 +166,7 @@ jobs:
     name: Deploy to Remote Server (SSH)
     runs-on: ubuntu-latest
     needs: [test]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.DEPLOY_HOST != ''
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment:
       name: production-ssh
     
@@ -176,6 +176,7 @@ jobs:
     
     - name: Deploy via SSH
       uses: appleboy/ssh-action@v1.0.3
+      if: ${{ secrets.DEPLOY_HOST != '' }}
       with:
         host: ${{ secrets.DEPLOY_HOST }}
         username: ${{ secrets.DEPLOY_USER }}
