@@ -3,3 +3,5 @@ Flask-SQLAlchemy==3.1.1
 python-pptx==0.6.23
 Werkzeug==3.0.1
 python-dotenv==1.0.0
+pytest==7.4.3
+pytest-cov==4.1.0
